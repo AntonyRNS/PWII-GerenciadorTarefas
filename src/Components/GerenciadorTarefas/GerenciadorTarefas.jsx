@@ -40,7 +40,35 @@ function GerenciadorTarefas() {
             return contador;
         }, 0);
     }
+    function ordenarPorPrioridade() {
+        const prioridadeValor = {
+            alta: 3,
+            media: 2,
+            baixa: 1
+        };
 
+        const tarefasOrdenadas = [...tarefas].sort((a, b) => {
+            return prioridadeValor[b.prioridade] - prioridadeValor[a.prioridade];
+        });
+
+        setTarefas(tarefasOrdenadas);
+    }
+
+    function contarPendentesEConcluidas(prioridadeTarefa) {
+        return tarefas.reduce(
+            (contador, tarefa) => {
+                if (prioridadeTarefa === 'nao_filtrar' || tarefa.prioridade === prioridadeTarefa) {
+                    if (tarefa.concluida) {
+                        contador.concluidas++;
+                    } else {
+                        contador.pendentes++;
+                    }
+                }
+                return contador;
+            },
+            { concluidas: 0, pendentes: 0 }
+        );
+    }
 
 
 
@@ -65,7 +93,7 @@ function GerenciadorTarefas() {
                 </select>
                 <button>Adicionar Tarefa</button>
             </form>
-
+            <button onClick={ordenarPorPrioridade}>Ordenar por prioridade</button>
             <label>Filtrar por prioridade: </label>
             <select
                 value={prioridadeFiltro}
@@ -76,7 +104,15 @@ function GerenciadorTarefas() {
                 <option value="media">Média</option>
                 <option value="alta">Alta</option>
             </select>
-            <p>Total de {contarTarefas(prioridadeFiltro)} tarefas</p>
+            {(() => {
+                const total = contarTarefas(prioridadeFiltro);
+                const { concluidas, pendentes } = contarPendentesEConcluidas(prioridadeFiltro);
+                return (
+                    <p>
+                        Total de {total} tarefas | ✅ {concluidas} concluída(s) | ❌ {pendentes} pendente(s)
+                    </p>
+                );
+            })()}
 
             <ul>
                 {tarefasFiltradas.map((tarefa) => (
