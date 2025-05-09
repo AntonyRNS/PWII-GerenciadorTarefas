@@ -1,28 +1,34 @@
 import { useState } from "react";
 
 function GerenciadorTarefas() {
+    // Definição dos atributos utilizados ao longo do códico.
     const [tarefas, setTarefas] = useState([]);
     const [id, setId] = useState(1);
     const [titulo, setTitulo] = useState('');
     const [prioridade, setPrioridade] = useState('baixa');
-    const [concluida, setConcluida] = useState(false);
     const [prioridadeFiltro, setPrioridadeFiltro] = useState('nao_filtrar');
+
+    // Função que adiciona uma nova tarefa, criando um objeto com id, titulo, 
+    // prioridade e estado inicial 'pendente' representado por 'false'
     const adicionarTarefa = (e) => {
         e.preventDefault();
-
+        if (titulo.trim() === ''){
+            alert('O titulo da tarefa não pode ser vazio!')
+            return;
+        }
         const novaTarefa = {
             id: id,
             titulo,
             prioridade,
-            concluida,
-        };
+            concluida: false,
 
+        };
         setTarefas([...tarefas, novaTarefa]);
         setTitulo('');
         setPrioridade('baixa');
         setId(id + 1);
     };
-
+    // Função que altera o estado de conclusão de uma tarefa, não foi necessário um usestate especifico para isso.
     function alterarConclusao(idTarefa) {
         setTarefas((tarefasAnteriores) =>
             tarefasAnteriores.map((t) =>
@@ -31,7 +37,7 @@ function GerenciadorTarefas() {
         );
     }
 
-
+    // Função que conta as tarefas com base na prioridade passada como parametro ou todas as tarefas por padrão.
     function contarTarefas(prioridadeTarefa) {
         return tarefas.reduce((contador, tarefa) => {
             if (prioridadeTarefa === 'nao_filtrar' || tarefa.prioridade === prioridadeTarefa) {
@@ -40,6 +46,8 @@ function GerenciadorTarefas() {
             return contador;
         }, 0);
     }
+
+    // Função que utiliza sort() para alterar a ordem com que as tarefas são exibidas.
     function ordenarPorPrioridade() {
         const prioridadeValor = {
             alta: 3,
@@ -53,9 +61,10 @@ function GerenciadorTarefas() {
 
         setTarefas(tarefasOrdenadas);
     }
-
+    // Variavel que guarda a primeira tarefa pendente com find()
     const primeiraPendente = tarefas.find((tarefa) => tarefa.concluida === false)
 
+    // Função que conta as tarefas e altera o contador com base em seu estatdo, as dividindo entre pendentes e concluidas.
     function contarPendentesEConcluidas(prioridadeTarefa) {
         return tarefas.reduce(
             (contador, tarefa) => {
@@ -74,10 +83,23 @@ function GerenciadorTarefas() {
 
 
 
+    // VAriavel que guarda uma lista com base na original, filtrando pela prioridade passada.
     const tarefasFiltradas = prioridadeFiltro === 'nao_filtrar'
         ? tarefas
         : tarefas.filter(t => t.prioridade === prioridadeFiltro);
 
+
+    // Função e variavel que deveriam gerar true apenas caso todas as tarefas estejam concluidas. 
+    // (Não completamente implementado)
+    const estaoConcluidas = (concluida) => concluida == true;
+    const resultado = tarefas.every(estaoConcluidas)
+    console.log(resultado)
+
+    // Variavel que usa some() para definir se tem alguma prioridade alta.
+    const seTemAlta = tarefas.some(tarefa => tarefa.prioridade === 'alta');
+
+
+    // Exibição.
     return (
         <div>
             <h3>Bem vindo ao seu gerenciador de tarefas!</h3>
@@ -95,15 +117,12 @@ function GerenciadorTarefas() {
                 </select>
                 <button>Adicionar Tarefa</button>
             </form>
-            {(() => {
-                const primeiro = primeiraPendente;
-                
-                return (
-                    <p>
-                        Primeira pendente: {primeiraPendente ? primeiraPendente.titulo : 'Nenhuma'}
-                    </p>
-                );
-            })()}
+            <p>
+                Primeira pendente: {primeiraPendente ? primeiraPendente.titulo : 'Nenhuma'}
+            </p>
+            <p>
+                {seTemAlta? 'Há tarefas com prioridade alta.': 'Não há tarefas com prioridade alta.'}
+            </p>
 
 
 
@@ -130,7 +149,7 @@ function GerenciadorTarefas() {
 
             <ul>
                 {tarefasFiltradas.map((tarefa) => (
-                    <li key={tarefa.id}>
+                    <li key={tarefa.id} style={{ textDecoration: tarefa.concluida ? 'line-through' : 'none' }}>
                         {tarefa.titulo} - Prioridade: {tarefa.prioridade}
                         <button onClick={() => alterarConclusao(tarefa.id)}>
                             {tarefa.concluida ? '✔️' : '❌'}
