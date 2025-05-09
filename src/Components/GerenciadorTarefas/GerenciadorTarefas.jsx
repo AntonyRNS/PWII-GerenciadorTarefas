@@ -12,7 +12,7 @@ function GerenciadorTarefas() {
     // prioridade e estado inicial 'pendente' representado por 'false'
     const adicionarTarefa = (e) => {
         e.preventDefault();
-        if (titulo.trim() === ''){
+        if (titulo.trim() === '') {
             alert('O titulo da tarefa não pode ser vazio!')
             return;
         }
@@ -80,7 +80,8 @@ function GerenciadorTarefas() {
             { concluidas: 0, pendentes: 0 }
         );
     }
-
+    const total = contarTarefas(prioridadeFiltro);
+    const { concluidas, pendentes } = contarPendentesEConcluidas(prioridadeFiltro);
 
 
     // VAriavel que guarda uma lista com base na original, filtrando pela prioridade passada.
@@ -121,7 +122,7 @@ function GerenciadorTarefas() {
                 Primeira pendente: {primeiraPendente ? primeiraPendente.titulo : 'Nenhuma'}
             </p>
             <p>
-                {seTemAlta? 'Há tarefas com prioridade alta.': 'Não há tarefas com prioridade alta.'}
+                {seTemAlta ? 'Há tarefas com prioridade alta.' : 'Não há tarefas com prioridade alta.'}
             </p>
 
 
@@ -137,15 +138,10 @@ function GerenciadorTarefas() {
                 <option value="media">Média</option>
                 <option value="alta">Alta</option>
             </select>
-            {(() => {
-                const total = contarTarefas(prioridadeFiltro);
-                const { concluidas, pendentes } = contarPendentesEConcluidas(prioridadeFiltro);
-                return (
-                    <p>
-                        Total de {total} tarefas | ✅ {concluidas} concluída(s) | ❌ {pendentes} pendente(s)
-                    </p>
-                );
-            })()}
+
+            <p>
+                Total de {total} tarefas | ✅ {concluidas} concluída(s) | ❌ {pendentes} pendente(s)
+            </p>
 
             <ul>
                 {tarefasFiltradas.map((tarefa) => (
