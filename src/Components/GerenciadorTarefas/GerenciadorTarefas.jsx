@@ -7,7 +7,6 @@ function GerenciadorTarefas() {
     const [prioridade, setPrioridade] = useState('baixa');
     const [concluida, setConcluida] = useState(false);
     const [prioridadeFiltro, setPrioridadeFiltro] = useState('nao_filtrar');
-
     const adicionarTarefa = (e) => {
         e.preventDefault();
 
@@ -31,6 +30,19 @@ function GerenciadorTarefas() {
             )
         );
     }
+
+
+    function contarTarefas(prioridadeTarefa) {
+        return tarefas.reduce((contador, tarefa) => {
+            if (prioridadeTarefa === 'nao_filtrar' || tarefa.prioridade === prioridadeTarefa) {
+                return contador + 1;
+            }
+            return contador;
+        }, 0);
+    }
+
+
+
 
     const tarefasFiltradas = prioridadeFiltro === 'nao_filtrar'
         ? tarefas
@@ -64,6 +76,7 @@ function GerenciadorTarefas() {
                 <option value="media">Média</option>
                 <option value="alta">Alta</option>
             </select>
+            <p>Total de {contarTarefas(prioridadeFiltro)} tarefas</p>
 
             <ul>
                 {tarefasFiltradas.map((tarefa) => (
