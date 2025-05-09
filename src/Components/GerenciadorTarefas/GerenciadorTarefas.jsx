@@ -54,6 +54,8 @@ function GerenciadorTarefas() {
         setTarefas(tarefasOrdenadas);
     }
 
+    const primeiraPendente = tarefas.find((tarefa) => tarefa.concluida === false)
+
     function contarPendentesEConcluidas(prioridadeTarefa) {
         return tarefas.reduce(
             (contador, tarefa) => {
@@ -93,6 +95,18 @@ function GerenciadorTarefas() {
                 </select>
                 <button>Adicionar Tarefa</button>
             </form>
+            {(() => {
+                const primeiro = primeiraPendente;
+                
+                return (
+                    <p>
+                        Primeira pendente: {primeiraPendente ? primeiraPendente.titulo : 'Nenhuma'}
+                    </p>
+                );
+            })()}
+
+
+
             <button onClick={ordenarPorPrioridade}>Ordenar por prioridade</button>
             <label>Filtrar por prioridade: </label>
             <select
