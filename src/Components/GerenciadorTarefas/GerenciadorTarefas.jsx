@@ -92,8 +92,8 @@ function GerenciadorTarefas() {
 
     // Função e variavel que deveriam gerar true apenas caso todas as tarefas estejam concluidas. 
     // (Não completamente implementado)
-    const estaoConcluidas = (concluida) => concluida == true;
-    const resultado = tarefas.every(estaoConcluidas)
+
+    const resultado = tarefas.every(tarefa => tarefa.concluida == true)
     console.log(resultado)
 
     // Variavel que usa some() para definir se tem alguma prioridade alta.
@@ -123,6 +123,9 @@ function GerenciadorTarefas() {
             </p>
             <p>
                 {seTemAlta ? 'Há tarefas com prioridade alta.' : 'Não há tarefas com prioridade alta.'}
+            </p>
+            <p>
+                {resultado? 'Todas as tarefas estão concluidas': 'Há tarefas pendentes.'} 
             </p>
 
 
